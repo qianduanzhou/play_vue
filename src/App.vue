@@ -10,13 +10,29 @@ import Layout from '@/views/layout/Layout'
 export default {
   name: 'App',
   created() {
-    
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    console.log('userInfo',userInfo)
+    if(userInfo) {
+      this.setUserInfo(userInfo)
+      this.initRoute(userInfo.auth)
+    }
   },
-  
-
   methods: {
+    //  根据用户权限动态添加路由
+    initRoute(auth) {
+      if(auth === 1) {
+        return
+      }
+      console.log('this.$router.options.',this.$router.options)
+      this.$router.options.routes.find((item,i) => {
+        console.log('item',item)
+        if(item.name == '权限中心') {
+          return this.$router.options.routes.splice(i,1)
+        }
+      })
+    },
     ...mapMutations({
-      setUserInfo:"SET_USERINFO"
+      setUserInfo: "SET_USERINFO",
     }),
   }
 }

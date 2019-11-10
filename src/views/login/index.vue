@@ -41,12 +41,17 @@
 import { isvalidUsername } from '@/utils/validate'
 import { requestApi } from '@/api/index'
 import Layout from '@/views/layout/Layout'
-
+import {mapGetters,mapMutations} from 'vuex'
 
 export default {
   name: 'Login',
   created() {
-    // this.initRoute()
+  },
+  computed: {
+    ...mapGetters([
+      'username',
+      'token'
+    ])
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -57,8 +62,8 @@ export default {
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 1) {
-        callback(new Error('密码不能小于5位'))
+      if (value.length < 4) {
+        callback(new Error('密码不能小于4位'))
       } else {
         callback()
       }
@@ -97,201 +102,42 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then((res) => {
-            
-            console.log(res)
-            if(res.code == 1) {
-              if(res.data.menu.length == 0) {
-                this.Message("warning","该用户没有任何权限！")
-                this.loading = false
-                return
-              }
-              this.loading = false
-              let list = res.data.menu
-              this.initRoute(list)
-            }else {
-              this.loading = false
-              this.Message("warning",res.msg)
-            }
-          }).catch(() => {
+          requestApi({name:"login",data:{
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          }}).then((res) => {
             this.loading = false
+            if(res.code == 200) {
+              let data = res.data
+              localStorage.setItem('userInfo',JSON.stringify(data))
+              this.setUserInfo(data)
+              this.initRoute(data.auth)
+              this.$router.push('/')
+              this.Message('success',res.msg)
+            }else {
+              this.Message('error',res.msg)
+            }
           })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
     //  根据用户权限动态添加路由
-    initRoute(list) {
-      // console.log(list,JSON.parse(localStorage.getItem('userInfo')))
-      // list = list ? list : JSON.parse(localStorage.getItem('userInfo')) ? JSON.parse(localStorage.getItem('userInfo')).menu : []
-      // console.log(list)
-      if(list.length == 0) {
+    initRoute(auth) {
+      if(auth === 1) {
         return
       }
-      
-      this.$router.options.routes.splice(0,this.$router.options.routes.length)
-              
-          for(let i = 0; i < list.length; i ++) {
-              let name = '',
-              childPath = '',
-              childList = []
-              switch (list[i].id) {
-                case 1:
-                  name = 'authorization'
-                  break;
-                case 2:
-                  name = 'order'
-                  break;
-                case 3:
-                  name = 'user'
-                  break;
-                case 4:
-                  name = 'goods'
-                  break;
-                case 5:
-                  name = 'goods2'
-                  break;
-                //  商品渠道模块
-                case 10:
-                  name = 'goodsChanne'
-                  break;
-                case 11:
-                  name = 'data'
-                  break;
-                case 18:
-                  name = 'service'
-                  break;
-                case 21:
-                  name = 'marketing'
-                  break;
-                case 25:
-                  name = 'operatorData'
-                  break;
-                case 28:
-                  name = 'message'
-                  break;
-                default:
-                  break;
-              }
-              if(list[i].sub.length == 0) {
-                childPath = 'index'
-                childList = [
-                  {
-                    path: childPath,
-                    name: name,
-                    component: () => import(`@/views/home/${name}/${name}`),
-                    meta: { title: list[i].name, icon: 'table' }
-                  }
-                ]
-              }
-              this.$router.options.routes.push({
-                      path: '/' + name,
-                      hidden: false,       
-                      component: Layout,
-                      alwaysShow:false,
-                      name: list[i].name,
-                      meta: { title: list[i].name, icon: 'example' },
-                      children: childList
-                    })
-                  childList = []
-              for(let j = 0; j < list[i].sub.length; j ++) {
-                let childrenName = ''
-                switch (list[i].sub[j].id) {
-                  case 6:
-                    childrenName = 'goodsInfo'
-                    break;
-                  case 7:
-                    childrenName = 'goodsEdit'
-                    break;
-                  case 8:
-                    childrenName = 'goodsInfo2'
-                    break;
-                  // case 9:
-                  //   childrenName = 'goodsChanne'
-                  //   break;
-                  case 9:
-                    childrenName = 'goodsEdit2'
-                    break;
-                  case 12:
-                    childrenName = 'everyData'
-                    break;
-                  case 13:
-                    childrenName = 'shopData'
-                    break;
-                  case 14:
-                    childrenName = 'operativeData'
-                    break;
-                  case 15:
-                    childrenName = 'order2'
-                    break;
-                  case 16:
-                    childrenName = 'order'
-                    break;
-                  case 17:
-                    childrenName = 'everyData2'
-                    break;
-                  case 19:
-                    childrenName = 'handlingPro'
-                    break;
-                  case 20:
-                    childrenName = 'serviceData'
-                    break;
-                  case 22:
-                    childrenName = 'newMarket'
-                    break;
-                  case 23:
-                    childrenName = 'marketData'
-                    break;
-                  case 24:
-                    childrenName = 'proNote'
-                    break;
-                  case 26:
-                    childrenName = 'presaleData'
-                    break;
-                  case 27:
-                    childrenName = 'personalsalesData'
-                    break;
-                  case 29:
-                    childrenName = 'mesModule'
-                    break;
-                  case 30:
-                    childrenName = 'mesSendAll'
-                    break;
-                  default:
-                    break;
-                }
-                if(j == 0) {
-                  this.$router.options.routes[i].redirect = `/${name}/${childrenName}`
-                }
-                this.$router.options.routes[i].children.push({
-                  path: childrenName,
-                  name: childrenName,   
-                  component: () => import(`@/views/home/${name}/${childrenName}`),
-                  meta: { title: list[i].sub[j].name, icon: 'table' }
-                })
-              }
-          }
-          this.$router.options.routes = this.$router.options.routes.concat([
-            { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-            {
-              path: '/',
-              component: Layout,
-              redirect: this.$router.options.routes[0].path + '/' + this.$router.options.routes[0].children[0].path,
-              name: '首页',
-              hidden: true,
-              meta: { title: '二类电商订单', icon: 'example' },
-            }
-          ])
-          //  bin-test-tag
-          //测试
-          // this.$router.addRoutes(this.$router.options.routes)
-          this.$router.push({
-            path: this.$router.options.routes[0].path + '/' + this.$router.options.routes[0].children[0].path
-          })
-          console.log('路由信息',this.$router.options.routes)
-    }
+      console.log('this.$router.options.',this.$router.options)
+      this.$router.options.routes.find((item,i) => {
+        console.log('item',item)
+        if(item.name == '权限中心') {
+          return this.$router.options.routes.splice(i,1)
+        }
+      })
+    },
+    ...mapMutations({
+      setUserInfo: "SET_USERINFO",
+    }),
+
   }
 }
 </script>

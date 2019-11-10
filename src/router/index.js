@@ -28,7 +28,7 @@ export var constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/authorization',
+    redirect: '/user',
     name: '首页',
     hidden: true,
     meta: { title: '二类电商订单', icon: 'example' }
@@ -119,7 +119,7 @@ export var constantRouterMap = [
     ]
   }
 ]
-
+console.log(constantRouterMap)
 const router = new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),

@@ -2,8 +2,8 @@
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
-    <el-button class="login" type="primary" @click="$router.push('/login')" v-if="!userInfo.name">登录</el-button>
-    <el-dropdown class="avatar-container" trigger="click" v-if="userInfo.name">
+    <el-button class="login" type="primary" @click="$router.push('/login')" v-if="!userInfo.username">登录</el-button>
+    <el-dropdown class="avatar-container" trigger="click" v-if="userInfo.username">
       <div class="avatar-wrapper">
         <img class="user-avatar" src="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1564219745&di=1cccdde1a0fb4a7d0e63c309836def8c&src=http://ku.90sjimg.com/element_origin_min_pic/01/35/19/43573bd7171010e.jpg">
         <i class="el-icon-caret-bottom"/>
@@ -17,7 +17,7 @@
                   color: #606266;
                   cursor: pointer;
                   outline: 0;
-                  border-bottom:1px solid #EBEEF5;">{{userInfo.name}}</p>
+                  border-bottom:1px solid #EBEEF5;">{{userInfo.username}}</p>
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             回首页
@@ -52,7 +52,7 @@ export default {
   },
   created() {
     //  bin-test-tag
-    // this.checkLogin()
+    console.log('userInfo',this.userInfo)
   },
   methods: {
     
@@ -60,9 +60,12 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+      localStorage.removeItem('userInfo')
+      this.setUserInfo({})
+      this.$router.push('/login')
+      setTimeout(() => {
+        location.reload()
+      },200)
     },
     
     ...mapMutations({

@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api':{
-        target:'http://ecommerceadmindev.heywoodsminiprogram.com/',
+        target:'http://localhost:3000/',
         changeOrigin:true,
         pathRewrite:{
           '^/api':''
