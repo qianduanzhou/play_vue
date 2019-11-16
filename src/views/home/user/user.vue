@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column
         prop="nickname"
-        label="昵称"
+        label="头像"
         align="center">
         <template slot-scope="scope">
           <img :src="scope.row.userPic" class="userPic"/>

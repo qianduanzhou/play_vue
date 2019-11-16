@@ -34,6 +34,19 @@ export default {
     url: '/customerManage/pushList',
     method: 'get'
   },
+  /**
+   * 商品模块
+   */
+  //  获取商品列表
+  gameList: {
+    url: '/gameManage/gameList',
+    method: 'get'
+  },
+  //  新建商品
+  createGoods: {
+    url: '/gameManage/createGames',
+    method: 'post'
+  },
 	test: {
 		url: '/userManage/test',
     method: 'get'
