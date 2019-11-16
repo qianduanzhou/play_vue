@@ -1,7 +1,7 @@
 <template>
   <div class="authorization">
     <el-input
-      placeholder="ID / username"
+      placeholder="ID / 账号"
       v-model="keyword"
       clearable
       style="width:200px;">
@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column
         prop="username"
-        label="username"
+        label="账号"
         align="center">
       </el-table-column>
       <el-table-column
@@ -118,9 +118,12 @@ export default {
         name:"getUserList",
         data
         }).then((res) => {
+          this.total = res.data.total
+          this.tableData = res.data.dataList
           if(res.code == 200) {
-            this.total = res.data.total
-            this.tableData = res.data.dataList
+            this.Message('success',res.msg)
+          }else {
+            this.Message('warning',res.msg)
           }
       })
     },
@@ -190,7 +193,6 @@ export default {
       this.initList(this.page)
       scrollTop()
     }
-
   }
 }
 </script>

@@ -1,5 +1,8 @@
-export default function formatDate(now) { 
-    now = new Date(now)
+export default function formatDate(now) {
+    now = Number(now)
+    if(!isNaN(now)) {
+        now = new Date(now)
+    }
     var year=now.getFullYear(); 
     var month=(now.getMonth() + 1) / 10 < 1 ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);  
     var date=now.getDate() / 10 < 1 ? '0' + now.getDate() : now.getDate(); 
