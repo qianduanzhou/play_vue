@@ -47,6 +47,21 @@ export default {
     url: '/gameManage/createGames',
     method: 'post'
   },
+  //  查看商品详情
+  getGoodsDetail: {
+    url: '/gameManage/gameDetail',
+    method: 'get'
+  },
+  //  编辑商品
+  editGoods: {
+    url: '/gameManage/editGames',
+    method: 'post'
+  },
+  // 删除商品
+  deleteGoods: {
+    url: '/gameManage/deleteGames',
+    method: 'post'
+  },
 	test: {
 		url: '/userManage/test',
     method: 'get'

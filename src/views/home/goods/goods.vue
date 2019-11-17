@@ -7,7 +7,7 @@
       style="width:200px;">
     </el-input>
     <el-button type="primary" style="margin-left:10px;" @click="search">搜索</el-button>
-    <el-button type="primary" style="margin-left:10px;" @click="showAdd = true">新建</el-button>
+    <el-button type="primary" style="margin-left:10px;" @click="showDialog = true,dialogType = 'created'">新建</el-button>
     <el-table
       :data="tableData"
       border
@@ -34,14 +34,14 @@
         label="段位"
         align="center">
         <template slot-scope="scope">
-           <el-select v-model="scope.row.levelList.id" filterable placeholder="段位列表">
-            <el-option
-              v-for="item in scope.row.levelList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              段位列表<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="item in scope.row.levelList" :key="item.id">{{item.name}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
       <el-table-column
@@ -63,20 +63,26 @@
         align="center"
         width="150">
         <template slot-scope="scope">
-          <!-- <el-button
-            @click.native.prevent="pushList(scope.row.id)"
+          <el-button
+            @click.native.prevent="showEdit(scope.row.id)"
             type="primary"
             size="small">
-            发布列表
-          </el-button> -->
+            编辑
+          </el-button>
+          <el-button
+            @click.native.prevent="deleteOne(scope.row.id)"
+            type="primary"
+            size="small">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 新建账号弹框 -->
+    <!-- 新建/编辑账号弹框 -->
     <el-dialog
       title="新建商品"
-      :visible.sync="showAdd"
+      :visible.sync="showDialog"
       width="50%"
       :before-close="resetData">
       <el-form :model="Form" :rules="rules" ref="Form" label-width="100px" class="demo-ruleForm">
@@ -132,7 +138,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resetData">取 消</el-button>
-        <el-button type="primary" @click="created" :loading="loading">确 定</el-button>
+        <el-button type="primary" @click="handleSave()" :loading="loading">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -156,9 +162,11 @@ export default {
       pageSize: 10,
       keyword: '',
       total: 0,
+      id: '',
       tableData: [],
       loading: false,
-      showAdd: false,
+      showDialog: false,
+      dialogType: 'created',
       Form: {
         name: '',
         type: '',
@@ -273,18 +281,38 @@ export default {
       this.page = 1
       this.initList()
     },
-    //  新建游戏
-    created() {
+    //  编辑弹框
+    showEdit(id) {
+      this.id = id
+      requestApi({
+        name: "getGoodsDetail",
+        data: {
+          id
+        }
+        }).then((res) => {
+          if(res.code == 200) {
+            let data = res.data
+            this.Form.name = data.name
+            this.Form.type = data.type
+            this.Form.picUrl = data.picUrl
+            this.Form.levelList = data.levelList
+            this.Form.hot = data.hot.toString()
+            this.dialogType = 'edit'
+            this.showDialog = true
+          }
+      })
+    },
+    //  新建/编辑游戏
+    handleSave() {
       console.log('form',this.Form)
       this.$refs['Form'].validate((valid) => {
         if (valid) {
           if(this.Form.picUrl == '') {
-            this.Message('warning', '请上传商品图片')
+            return this.Message('warning', '请上传商品图片')
           }else if(this.Form.type == '') {
-            this.Message('warning', '请选择商品类型')
-          }else if(this.Form.levelList.length == 0) {
-            this.Message('warning', '请添加商品段位')
+            return this.Message('warning', '请选择商品类型')
           }
+          this.Form.levelList = Array.from(new Set(this.Form.levelList))
           let data = {
             name: this.Form.name,
             picUrl: this.Form.picUrl,
@@ -292,41 +320,95 @@ export default {
             levelList: JSON.stringify(this.Form.levelList),
             hot: this.Form.hot
           }
-          requestApi({
-            name: "createGoods",
-            data
-          }).then((res) => {
-            if(res.code == 200) {
-              this.Message('success', '创建成功')
-              this.resetData()
-              this.pageChange(this.page)
-            }else {
-              this.Message('error', res.msg)
-            }
-            this.loading = false
-          }).catch((err) => {
-            this.loading = false
-          })
+          if(this.dialogType == 'created') {
+            this.created(data)
+          }else {
+            data.id = this.id
+            this.editOne(data)
+          }
         } else {
           this.loading = false
           return false;
         }
       });
     },
+    created(data) {
+      requestApi({
+        name: "createGoods",
+        data
+      }).then((res) => {
+        if(res.code == 200) {
+          this.Message('success', '创建成功')
+          this.resetData()
+          this.pageChange(this.page)
+        }else {
+          this.Message('error', res.msg)
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+      })
+    },
+    //  编辑
+    editOne(data) {
+      requestApi({
+        name: "editGoods",
+        data
+      }).then((res) => {
+        if(res.code == 200) {
+          this.Message('success', '编辑成功')
+          this.resetData()
+          this.pageChange(this.page)
+        }else {
+          this.Message('error', res.msg)
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+      })
+    },
+    //  删除
+    deleteOne(id) {
+       this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        requestApi({
+          name: "deleteGoods",
+          data: {
+            id
+          }
+        }).then((res) => {
+          if(res.code == 200) {
+            this.pageChange(this.page)
+            this.Message('success', '删除成功')
+          }
+        })
+        }).catch(() => {
+          this.Message('info', '已取消删除')     
+      });
+    },
     //  重置数据
     resetData() {
-      this.showAdd = false
+      this.showDialog = false
+      this.Form.name = ''
+      this.Form.type = ''
+      this.Form.picUrl = ''
+      this.Form.type = ''
+      this.Form.hot = '2'
+      this.Form.levelList = []
     },
     // 上传图片相关
     handleAvatarSuccess(res, file) {
       console.log(file)
-      this.Form.picUrl = URL.createObjectURL(file.raw);
+      this.Form.picUrl = 'http://localhost:3000/public/images/' + file.response.data
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPG = file.type.includes('image');
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        this.$message.error('只能上传图片');
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
@@ -411,5 +493,18 @@ export default {
     width: 90px;
     margin-left: 10px;
     vertical-align: bottom;
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+  .demonstration {
+    display: block;
+    color: #8492a6;
+    font-size: 14px;
+    margin-bottom: 20px;
   }
 </style>
