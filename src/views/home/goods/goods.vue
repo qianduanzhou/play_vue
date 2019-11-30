@@ -145,6 +145,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
+      :page-size="pageSize"
       background
       layout="total,prev, pager, next, jumper"
       style="margin-top:50px;"

@@ -67,6 +67,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
+      :page-size="pageSize"
       background
       layout="total,prev, pager, next, jumper"
       style="margin-top:50px;"
@@ -190,7 +191,7 @@ export default {
     //  改变页码
     pageChange(page) {
       this.page = page
-      this.initList(this.page)
+      this.initList()
       scrollTop()
     }
   }

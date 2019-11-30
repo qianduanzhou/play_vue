@@ -143,6 +143,7 @@
     <el-pagination
       :total="total"
       :current-page="page"
+      :page-size="pageSize"
       background
       layout="total,prev, pager, next, jumper"
       style="margin-top:50px;"
@@ -204,8 +205,8 @@ export default {
           userId
         }
         }).then((res) => {
-          this.pushListData = res.data.dataList
           if(res.code == 200) {
+            this.pushListData = res.data.dataList
             this.showPushList = true
           }else {
             this.Message('warning',res.msg)

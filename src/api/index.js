@@ -2,7 +2,7 @@ import request from './axios'
 import qs from 'qs'
 import apis from "./apis";
 
-function requestApi({ name, data, header, headerType }) {
+function requestApi({ name, data, header, headerType,responseType }) {
   if (Object.keys(apis).indexOf(name) === -1) {
     //action不在reqConfig配置中
     throw new SyntaxError(`请在apis文件注册路由:  ${name}`);
@@ -24,7 +24,8 @@ function requestApi({ name, data, header, headerType }) {
       headers: {
         'Content-Type': headerType && headerType == 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
         ...header
-      }
+      },
+      responseType
     }).then(
       function(res) {
         resolve(res);

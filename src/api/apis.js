@@ -2,65 +2,62 @@ export default {
   /**
    * 权限模块
    */
-  //  登录
-  login: {
+  login: { //  登录
     url: '/userManage/login',
     method: 'post'
   },
-  //  获取账号列表
-  getUserList: {
+  getUserList: { //  获取账号列表
 		url: '/userManage/userList',
     method: 'get'
   },
-  //  创建账号
-  createdUser: {
+  createdUser: { //  创建账号
     url: '/userManage/register',
     method: 'post'
   },
-  //  删除账号
-  deleteUser: {
+  deleteUser: { //  删除账号
     url: '/userManage/delete',
     method: 'post'
   },
   /**
    * 用户模块
    */
-  //  获取用户列表
-  getCustomerList: {
+  getCustomerList: { //  获取用户列表
     url: '/customerManage/customerList',
     method: 'get'
   },
-  getPushList: {
+  getPushList: { //  获取用户发布列表
     url: '/customerManage/pushList',
     method: 'get'
   },
   /**
    * 商品模块
    */
-  //  获取商品列表
-  gameList: {
+  gameList: { //  获取商品列表
     url: '/gameManage/gameList',
     method: 'get'
   },
-  //  新建商品
-  createGoods: {
+  createGoods: { //  新建商品
     url: '/gameManage/createGames',
     method: 'post'
   },
-  //  查看商品详情
-  getGoodsDetail: {
+  getGoodsDetail: { //  查看商品详情
     url: '/gameManage/gameDetail',
     method: 'get'
   },
-  //  编辑商品
-  editGoods: {
+  editGoods: { //  编辑商品
     url: '/gameManage/editGames',
     method: 'post'
   },
-  // 删除商品
-  deleteGoods: {
+  deleteGoods: { // 删除商品
     url: '/gameManage/deleteGames',
     method: 'post'
+  },
+  /**
+   * 订单模块
+   */
+  orderList: { //  订单列表
+    url: '/orderManage/orderList',
+    method: 'get'
   },
 	test: {
 		url: '/userManage/test',
