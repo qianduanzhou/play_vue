@@ -74,14 +74,14 @@
         </template>
         formatDate
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="操作"
         align="center"
         width="150">
         <template slot-scope="scope">
           <button></button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <el-pagination

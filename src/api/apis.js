@@ -59,6 +59,13 @@ export default {
     url: '/orderManage/orderList',
     method: 'get'
   },
+  /**
+   * 数据模块
+   */
+  reportList: {
+    url: '/reportManage/reportList',
+    method: 'get'
+  },
 	test: {
 		url: '/userManage/test',
     method: 'get'
