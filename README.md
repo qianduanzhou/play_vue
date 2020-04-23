@@ -1,78 +1,35 @@
-# xhw-admin-cli
+# 陪玩后台管理系统
 
-> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
+如下:
 
-## Build Setup
+## 1.介绍
 
-```bash
-# Install dependencies
-npm install
+这是陪玩小程序的后台管理系统，负责管理数据
 
-# Serve with hot reload at localhost:800
-npm run dev
+## 2.安装
 
-# Build for production with minification
-npm run build
+使用npm install安装依赖包，然后npm run dev启动
 
-# Build for production and view the bundle analyzer report
-npm run build --report
-```
+## 3.展示
 
-### Router 配置示例
+对本管理系统部分功能进行展示
 
-```
-{
-  path: '/permission',
-  component: Layout,
-  redirect: '/permission/index', //重定向地址，在面包屑中点击会重定向去的地址
-  hidden: true, // 不在侧边栏线上
-  alwaysShow: true, //一直显示根路由
-  meta: { roles: ['admin','editor'] }, //你可以在根路由设置权限，这样它下面所以的子路由都继承了这个权限
-  children: [{
-    path: 'index',
-    component: ()=>import('permission/index'),
-    name: 'permission',
-    meta: {
-      title: 'permission',
-      icon: 'lock', //图标
-      role: ['admin','editor'], //或者你可以给每一个子路由设置自己的权限
-      noCache: true // 不会被 <keep-alive> 缓存
-    }
-  }]
-}
-```
+### 1.权限中心
 
-### 目录结构
+![https://github.com/qianduanzhou/play_vue/blob/master/static/%E6%9D%83%E9%99%90%E4%B8%AD%E5%BF%83.PNG](https://github.com/qianduanzhou/play_vue/blob/master/static/权限中心.PNG)
 
-```
-├── build                      // 构建相关
-├── config                     // 配置相关
-├── src                        // 源代码
-│   ├── api                    // 所有请求
-│   ├── assets                 // 主题 字体等静态资源
-│   ├── components             // 全局公用组件
-│   ├── filters                // 全局 filter
-│   ├── icons                  // 项目所有 svg icons
-│   ├── router                 // 路由
-│   ├── store                  // 全局 store管理
-│   ├── styles                 // 全局样式
-│   ├── utils                  // 全局公用方法
-│   ├── views                  // views 所有页面
-│   ├── App.vue                // 入口页面
-│   ├── main.js                // 入口文件 加载组件 初始化等
-├── static                     // 第三方不打包资源
-│   └── Tinymce                // 富文本
-├── .babelrc                   // babel-loader 配置
-├── .eslintrc.js               // eslint 配置项
-├── .gitignore                 // git 忽略项
-├── .travis.yml                // 自动化CI配置
-├── favicon.ico                // favicon图标
-├── index.html                 // html模板
-└── package.json               // package.json
-```
+### 2.商品中心
 
-### axios 拦截器
+![https://github.com/qianduanzhou/play_vue/blob/master/static/%E5%95%86%E5%93%81%E4%B8%AD%E5%BF%83%E9%A6%96%E9%A1%B5.PNG](https://github.com/qianduanzhou/play_vue/blob/master/static/商品中心首页.PNG)
 
-项目使用 axios 拦截器统一处理接口
-request 拦截器==>对请求参数做处理
-respone 拦截器==>对响应做处理
+### 3.用户中心
+
+![https://github.com/qianduanzhou/play_vue/blob/master/static/%E7%94%A8%E6%88%B7.PNG](https://github.com/qianduanzhou/play_vue/blob/master/static/用户.PNG)
+
+### 4.订单中心
+
+![https://github.com/qianduanzhou/play_vue/blob/master/static/%E8%AE%A2%E5%8D%95%E4%B8%AD%E5%BF%83.PNG](https://github.com/qianduanzhou/play_vue/blob/master/static/订单中心.PNG)
+
+### 5.数据中心
+
+![https://github.com/qianduanzhou/play_vue/blob/master/static/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83.PNG](https://github.com/qianduanzhou/play_vue/blob/master/static/数据中心.PNG)
