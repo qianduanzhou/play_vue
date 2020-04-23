@@ -182,6 +182,9 @@ export default {
           }
         }).then((res) => {
           this.Message('success', '删除成功')   
+          if((this.total - 1) / this.pageSize <= (this.page - 1)) {
+            this.page --
+          }
           this.pageChange(this.page) 
         })
       }).catch(() => {

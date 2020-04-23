@@ -121,6 +121,7 @@ export default {
   methods: {
     //  初始化
     initList(isExcel) {
+      console.log(123123)
       let data = {
         page: this.page,
         pageSize: this.pageSize,

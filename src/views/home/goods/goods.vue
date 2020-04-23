@@ -81,7 +81,7 @@
 
     <!-- 新建/编辑账号弹框 -->
     <el-dialog
-      title="新建商品"
+      :title="dialogType == 'created' ? '新建商品' : '编辑商品'"
       :visible.sync="showDialog"
       width="50%"
       :before-close="resetData">
@@ -382,6 +382,9 @@ export default {
           }
         }).then((res) => {
           if(res.code == 200) {
+            if((this.total - 1) / this.pageSize <= (this.page - 1)) {
+              this.page --
+            }
             this.pageChange(this.page)
             this.Message('success', '删除成功')
           }
@@ -422,7 +425,7 @@ export default {
     },
     showInput() {
       this.Form.inputVisible = true;
-      this.$nextTick(_ => {
+      this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
